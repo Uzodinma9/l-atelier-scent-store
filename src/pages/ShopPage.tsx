@@ -2,10 +2,13 @@ import { useState } from 'react'
 import { Search, SlidersHorizontal } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { ProductCard } from '../components/ProductCard'
-import { products } from '../data/products'
 import type { Product, ProductCategory } from '../types'
 
 type ShopPageProps = {
+  products: Product[]
+  productsLoading: boolean
+  productsError: string | null
+  onRetry: () => void
   onAddToCart: (product: Product) => void
   wishlistIds: string[]
   onToggleWishlist: (productId: string) => void
@@ -13,7 +16,7 @@ type ShopPageProps = {
 
 const categories: Array<'All' | ProductCategory> = ['All', 'Designer', 'Niche', 'Arabic', 'Signature']
 
-export function ShopPage({ onAddToCart, wishlistIds, onToggleWishlist }: ShopPageProps) {
+export function ShopPage({ products, productsLoading, productsError, onRetry, onAddToCart, wishlistIds, onToggleWishlist }: ShopPageProps) {
   const [searchParams, setSearchParams] = useSearchParams()
   const initialCategory = categories.find((category) => category === searchParams.get('category')) ?? 'All'
   const [category, setCategory] = useState<'All' | ProductCategory>(initialCategory)
@@ -45,7 +48,7 @@ export function ShopPage({ onAddToCart, wishlistIds, onToggleWishlist }: ShopPag
       <div className="shop-page-heading">
         <p className="eyebrow">The fragrance collection</p>
         <h1>Find your <em>fragrance.</em></h1>
-        <p>Twenty considered scents, from iconic designer houses to new discoveries.</p>
+        <p>{productsLoading ? 'Loading the fragrance collection.' : `${products.length} considered fragrances from the L'Atelier collection.`}</p>
       </div>
       <div className="shop-toolbar">
         <label className="shop-search"><Search size={16} /><input type="search" value={search} onChange={(event) => updateSearch(event.target.value)} placeholder="Search fragrances or houses" aria-label="Search fragrances or houses" /></label>
@@ -54,7 +57,11 @@ export function ShopPage({ onAddToCart, wishlistIds, onToggleWishlist }: ShopPag
         <label className="select-control sort-control"><SlidersHorizontal size={14} /><select value={sort} aria-label="Sort products" onChange={(event) => setSort(event.target.value)}><option value="featured">Featured</option><option value="price-ascending">Price: low to high</option><option value="price-descending">Price: high to low</option><option value="name">Name: A to Z</option></select></label>
       </div>
       <div className="shop-result-line"><span>{filteredProducts.length} fragrances</span><span>All prices in Nigerian naira</span></div>
-      {filteredProducts.length ? (
+      {productsLoading ? (
+        <p className="catalog-feedback" role="status">Loading fragrances…</p>
+      ) : productsError ? (
+        <div className="shop-empty catalog-feedback-error" role="alert"><p>{productsError}</p><button type="button" onClick={onRetry}>Try again</button></div>
+      ) : filteredProducts.length ? (
         <div className="product-grid shop-product-grid">
           {filteredProducts.map((product) => (
             <ProductCard

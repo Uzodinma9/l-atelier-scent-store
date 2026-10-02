@@ -2,6 +2,10 @@ import { createContext } from 'react'
 import type { CartItem, Product } from '../types'
 
 export type StoreContextValue = {
+  products: Product[]
+  productsLoading: boolean
+  productsError: string | null
+  refreshProducts: () => void
   cartItems: CartItem[]
   cartCount: number
   addToCart: (product: Product, quantity?: number) => void

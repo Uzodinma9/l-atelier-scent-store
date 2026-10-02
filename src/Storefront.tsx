@@ -8,12 +8,11 @@ import { WishlistDrawer } from './components/WishlistDrawer'
 import { HomePage } from './pages/HomePage'
 import { ProductDetailPage } from './pages/ProductDetailPage'
 import { ShopPage } from './pages/ShopPage'
-import { products } from './data/products'
 import { useStore } from './store/useStore'
 import type { Product } from './types'
 
 export function Storefront() {
-  const { cartItems, cartCount, addToCart, changeQuantity, removeFromCart, wishlistIds, toggleWishlist } = useStore()
+  const { products, productsLoading, productsError, refreshProducts, cartItems, cartCount, addToCart, changeQuantity, removeFromCart, wishlistIds, toggleWishlist } = useStore()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isWishlistOpen, setIsWishlistOpen] = useState(false)
   const [isAccountOpen, setIsAccountOpen] = useState(false)
@@ -35,9 +34,9 @@ export function Storefront() {
         onWishlist={() => setIsWishlistOpen(true)}
       />
       <Routes>
-        <Route path="/" element={<HomePage onAddToCart={addProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />} />
-        <Route path="/shop" element={<ShopPage onAddToCart={addProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />} />
-        <Route path="/products/:productId" element={<ProductDetailPage onAddToCart={addProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />} />
+        <Route path="/" element={<HomePage products={products} productsLoading={productsLoading} productsError={productsError} onRetry={refreshProducts} onAddToCart={addProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />} />
+        <Route path="/shop" element={<ShopPage products={products} productsLoading={productsLoading} productsError={productsError} onRetry={refreshProducts} onAddToCart={addProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />} />
+        <Route path="/products/:productId" element={<ProductDetailPage products={products} productsLoading={productsLoading} productsError={productsError} onRetry={refreshProducts} onAddToCart={addProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />} />
         <Route path="*" element={<main className="not-found"><p className="eyebrow">Not found</p><h1>This fragrance is elsewhere.</h1><Link className="lux-button lux-button-dark" to="/shop">Return to the collection</Link></main>} />
       </Routes>
       <SiteFooter />

@@ -3,21 +3,27 @@ import { Link } from 'react-router-dom'
 import { ProductCard } from '../components/ProductCard'
 import { ProductBottle } from '../components/ProductBottle'
 import type { Product } from '../types'
-import { products } from '../data/products'
 
 type HomePageProps = {
+  products: Product[]
+  productsLoading: boolean
+  productsError: string | null
+  onRetry: () => void
   onAddToCart: (product: Product) => void
   wishlistIds: string[]
   onToggleWishlist: (productId: string) => void
 }
 
-export function HomePage({ onAddToCart, wishlistIds, onToggleWishlist }: HomePageProps) {
+export function HomePage({ products, productsLoading, productsError, onRetry, onAddToCart, wishlistIds, onToggleWishlist }: HomePageProps) {
   const featuredProducts = products.filter((product) => product.featured).slice(0, 4)
+  const fragranceHouses = [...new Set(products.map((product) => product.brand))]
+  const heroProduct = products[0]
+  const signatureProduct = products.find((product) => product.category === 'Signature')
 
   return (
     <main>
       <section className="luxe-hero" id="home">
-        <div className="luxe-hero-image"><ProductBottle product={products[0]} /></div>
+        <div className="luxe-hero-image">{heroProduct ? <ProductBottle product={heroProduct} /> : <div className="catalog-art-placeholder" aria-hidden="true" />}</div>
         <div className="luxe-hero-content">
           <p className="eyebrow">L'Atelier Scent · Fragrance house</p>
           <h1>Wear what<br />moves <em>you.</em></h1>
@@ -29,7 +35,7 @@ export function HomePage({ onAddToCart, wishlistIds, onToggleWishlist }: HomePag
       </section>
 
       <section className="house-strip" aria-label="Featured fragrance houses">
-        <span>VERSACE</span><span>TOM FORD</span><span>DIOR</span><span>LATTAFA</span><span>L'ATELIER SCENT</span>
+        {fragranceHouses.map((brand) => <span key={brand}>{brand.toUpperCase()}</span>)}
       </section>
 
       <section className="editorial-intro" id="about">
@@ -44,26 +50,28 @@ export function HomePage({ onAddToCart, wishlistIds, onToggleWishlist }: HomePag
           <div><p className="eyebrow">A few we love</p><h2>In good <em>company.</em></h2></div>
           <Link className="inline-link" to="/shop">View the full collection <ArrowRight size={14} /></Link>
         </div>
-        <div className="product-grid">
-          {featuredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAdd={onAddToCart}
-              isWishlisted={wishlistIds.includes(product.id)}
-              onToggleWishlist={onToggleWishlist}
-            />
-          ))}
-        </div>
+        {productsLoading ? <p className="catalog-feedback" role="status">Loading fragrances…</p> : productsError ? <div className="catalog-feedback catalog-feedback-error" role="alert"><p>{productsError}</p><button type="button" onClick={onRetry}>Try again</button></div> : featuredProducts.length === 0 ? <p className="catalog-feedback">No featured fragrances are available yet.</p> : (
+          <div className="product-grid">
+            {featuredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAdd={onAddToCart}
+                isWishlisted={wishlistIds.includes(product.id)}
+                onToggleWishlist={onToggleWishlist}
+              />
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="signature-feature" id="signature">
-        <div className="signature-image"><ProductBottle product={products[products.length - 1]} /></div>
+        <div className="signature-image">{signatureProduct ? <ProductBottle product={signatureProduct} /> : <div className="catalog-art-placeholder" aria-hidden="true" />}</div>
         <div className="signature-copy">
           <p className="eyebrow">The L'Atelier signature</p>
           <h2>Close to skin.<br /><em>Impossible to forget.</em></h2>
-          <p>Signature No. 01 brings amber, iris and soft woods together in a quietly distinctive composition.</p>
-          <Link className="lux-button lux-button-dark" to="/products/latelier-signature-01">Discover Signature No. 01 <ArrowRight size={15} /></Link>
+          <p>{signatureProduct?.description ?? 'A quietly distinctive composition, close to the skin.'}</p>
+          <Link className="lux-button lux-button-dark" to={signatureProduct ? `/products/${signatureProduct.id}` : '/shop'}>Discover {signatureProduct?.name ?? 'the signature'} <ArrowRight size={15} /></Link>
         </div>
       </section>
 

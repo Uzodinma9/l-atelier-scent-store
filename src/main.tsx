@@ -5,13 +5,13 @@ import { StoreProvider } from './store/StoreProvider'
 import './index.css'
 import './App.css'
 import './storefront.css'
-import { Storefront } from './Storefront'
+import App from './App'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
       <StoreProvider>
-        <Storefront />
+        <App />
       </StoreProvider>
     </BrowserRouter>
   </StrictMode>,

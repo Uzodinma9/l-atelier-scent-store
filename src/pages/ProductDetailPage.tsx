@@ -3,22 +3,27 @@ import { ArrowLeft, ArrowRight, Check, Heart, Minus, Plus, ShoppingBag } from 'l
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ProductCard } from '../components/ProductCard'
 import { ProductImage } from '../components/ProductImage'
-import { products } from '../data/products'
 import { formatCurrency } from '../utils/formatCurrency'
 import type { Product } from '../types'
 
 type ProductDetailPageProps = {
+  products: Product[]
+  productsLoading: boolean
+  productsError: string | null
+  onRetry: () => void
   onAddToCart: (product: Product, quantity: number) => void
   wishlistIds: string[]
   onToggleWishlist: (productId: string) => void
 }
 
-export function ProductDetailPage({ onAddToCart, wishlistIds, onToggleWishlist }: ProductDetailPageProps) {
+export function ProductDetailPage({ products, productsLoading, productsError, onRetry, onAddToCart, wishlistIds, onToggleWishlist }: ProductDetailPageProps) {
   const { productId } = useParams()
   const product = products.find((item) => item.id === productId)
   const [quantity, setQuantity] = useState(1)
   const [justAdded, setJustAdded] = useState(false)
 
+  if (!product && productsLoading) return <main className="detail-page section-shell"><p className="catalog-feedback" role="status">Loading fragrance…</p></main>
+  if (!product && productsError) return <main className="detail-page section-shell"><div className="catalog-feedback catalog-feedback-error" role="alert"><p>{productsError}</p><button type="button" onClick={onRetry}>Try again</button></div></main>
   if (!product) return <Navigate to="/shop" replace />
 
   const relatedProducts = products.filter((item) => item.category === product.category && item.id !== product.id).slice(0, 4)
@@ -38,7 +43,7 @@ export function ProductDetailPage({ onAddToCart, wishlistIds, onToggleWishlist }
           <h1>{product.name}</h1>
           <p className="detail-family">{product.family}</p>
           <p className="detail-price">{formatCurrency(product.price, product.currency)}</p>
-          <p className="detail-size">{product.size} <span>·</span> Eau de parfum</p>
+          <p className="detail-size">{product.size} <span>·</span> Fragrance</p>
           <p className="detail-description">{product.description}</p>
           <div className="notes-block"><span className="detail-label">Fragrance notes</span><div className="note-list">{product.fragranceNotes.map((note) => <span key={note}>{note}</span>)}</div></div>
           <div className="detail-buy-row">
