@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+
+:root {
+  --paper: #f8f6ef;
+  --paper-deep: #eeece1;
+  --ink: #242b24;
+  --moss: #61745a;
+  --muted: #73756a;
+  --line: #deddd2;
+  --line-dark: #c8c8ba;
+  --serif: 'Playfair Display', 'Iowan Old Style', Georgia, serif;
+  --sans: 'DM Sans', 'Avenir Next', sans-serif;
+
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--sans);
+  font-synthesis: none;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 0;
+  scroll-behavior: smooth;
+  scroll-padding-top: 20px;
+}
+
+body {
+  min-width: 0;
+  margin: 0;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--paper);
+  background: var(--moss);
+}
+
+#root {
+  min-height: 100svh;
+}
