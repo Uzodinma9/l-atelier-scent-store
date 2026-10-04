@@ -12,7 +12,7 @@ import { useStore } from './store/useStore'
 import type { Product } from './types'
 
 export function Storefront() {
-  const { products, productsLoading, productsError, refreshProducts, cartItems, cartCount, addToCart, changeQuantity, removeFromCart, wishlistIds, toggleWishlist } = useStore()
+  const { products, productsLoading, productsError, refreshProducts, cartItems, cartCount, addToCart, changeQuantity, removeFromCart, clearCart, wishlistIds, toggleWishlist } = useStore()
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isWishlistOpen, setIsWishlistOpen] = useState(false)
   const [isAccountOpen, setIsAccountOpen] = useState(false)
@@ -47,6 +47,7 @@ export function Storefront() {
         onContinueShopping={() => setIsCartOpen(false)}
         onChangeQuantity={changeQuantity}
         onRemove={removeFromCart}
+        onClearCart={clearCart}
       />
       <WishlistDrawer
         items={wishlistProducts}

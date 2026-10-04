@@ -11,6 +11,7 @@ export type StoreContextValue = {
   addToCart: (product: Product, quantity?: number) => void
   changeQuantity: (productId: string, quantity: number) => void
   removeFromCart: (productId: string) => void
+  clearCart: () => void
   wishlistIds: string[]
   toggleWishlist: (productId: string) => void
 }

@@ -135,12 +135,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setStoredCartLines((lines) => lines.filter((line) => line.productId !== productId))
   }
 
+  const clearCart = () => {
+    setStoredCartLines([])
+  }
+
   const toggleWishlist = (productId: string) => {
     setStoredWishlistIds((ids) => ids.includes(productId) ? ids.filter((id) => id !== productId) : [...ids, productId])
   }
 
   return (
-    <StoreContext.Provider value={{ products, productsLoading, productsError, refreshProducts, cartItems, cartCount, addToCart, changeQuantity, removeFromCart, wishlistIds, toggleWishlist }}>
+    <StoreContext.Provider value={{ products, productsLoading, productsError, refreshProducts, cartItems, cartCount, addToCart, changeQuantity, removeFromCart, clearCart, wishlistIds, toggleWishlist }}>
       {children}
     </StoreContext.Provider>
   )
