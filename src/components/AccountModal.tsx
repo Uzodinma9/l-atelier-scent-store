@@ -25,7 +25,6 @@ export function AccountModal({ isOpen, onClose }: AccountModalProps) {
   const [statusMessage, setStatusMessage] = useState(getRedirectErrorMessage)
   const [isBusy, setIsBusy] = useState(false)
   const [userEmail, setUserEmail] = useState<string | null>(null)
-  const isConfigured = !authConfigurationError
 
   useEffect(() => {
     let active = true
@@ -106,7 +105,7 @@ export function AccountModal({ isOpen, onClose }: AccountModalProps) {
     })
   }
 
-  const noteText = statusMessage || (isConfigured ? 'Sign in with Google or your email address.' : authConfigurationError ?? '')
+  const noteText = statusMessage || 'Sign in with Google or your email address.'
 
   return (
     <div className="overlay-layer account-overlay" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -127,7 +126,7 @@ export function AccountModal({ isOpen, onClose }: AccountModalProps) {
               <button type="button" role="tab" aria-selected={mode === 'signup'} className={mode === 'signup' ? 'is-active' : ''} onClick={() => { setMode('signup'); setStatusMessage('') }}>Sign up</button>
               <button type="button" role="tab" aria-selected={mode === 'signin'} className={mode === 'signin' ? 'is-active' : ''} onClick={() => { setMode('signin'); setStatusMessage('') }}>Sign in</button>
             </div>
-            <button className="google-button" type="button" disabled={isBusy || !isConfigured} onClick={handleGoogleSignIn}>
+            <button className="google-button" type="button" disabled={isBusy} onClick={handleGoogleSignIn}>
               <svg className="google-mark" viewBox="0 0 48 48" aria-hidden="true">
                 <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303C33.653 32.657 29.223 36 24 36c-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.651-.389-3.917z" />
                 <path fill="#FF3D00" d="m6.306 14.691 6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4c-7.682 0-14.344 4.326-17.694 10.691z" />
@@ -141,7 +140,7 @@ export function AccountModal({ isOpen, onClose }: AccountModalProps) {
               {mode === 'signup' && <label className="email-field">Your name<input type="text" name="name" autoComplete="name" placeholder="Full name" required /></label>}
               <label className="email-field">Email address<input type="email" name="email" autoComplete="email" placeholder="you@example.com" required /></label>
               <label className="email-field">Password<input type="password" name="password" autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} placeholder={mode === 'signup' ? 'Create a password' : 'Your password'} minLength={8} required /></label>
-              <button className="button button-dark email-button" type="submit" disabled={isBusy || !isConfigured}>{mode === 'signup' ? 'Create account' : 'Sign in'} <span aria-hidden="true">→</span></button>
+              <button className="button button-dark email-button" type="submit" disabled={isBusy}>{mode === 'signup' ? 'Create account' : 'Sign in'} <span aria-hidden="true">→</span></button>
             </form>
           </>
         )}
